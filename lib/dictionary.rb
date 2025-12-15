@@ -3,7 +3,7 @@ class Dictionary
 
   def initialize(file)
     @words = get_array_of_words(file)
-    @game_word = get_word(@words)
+    @game_word = get_word(@words).upcase
   end
 
   def get_array_of_words(file)
@@ -21,6 +21,3 @@ class Dictionary
     arr[rand(arr.length - 1)]
   end
 end
-
-words = Dictionary.new("google-10000-english-no-swears.txt")
-p words.game_word

@@ -9889,7 +9889,6 @@ outlets
 swaziland
 varieties
 arbor
-media
-wiki
+mediawiki
 configurations
 poison
