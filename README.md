@@ -1,6 +1,6 @@
 # hangman
 https://www.theodinproject.com/lessons/ruby-hangman
 
-
-
-Note: In google's words file, "mediawiki" has been split into two separate words as "mediawiki" itself is not a word.
+Rules:
+Player must guess the word by providing individual letters of the word. (Case-insensitive)
+They are allowed to guess until they make the 8th (according to the wiki) mistake.
