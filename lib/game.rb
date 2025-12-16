@@ -8,12 +8,17 @@ class Game
 
   def initialize
     @dictionary = Dictionary.new("google-10000-english-no-swears.txt")
-    @word = @dictionary.game_word
+    @word = @dictionary.game_word.upcase
     @display = Display.new(@word)
-    @guessed = []
+    @guessed = {}
+    @missed = {}
   end
 
   def start_game
     @display.introduction
+  end
+
+  def guess_letter(letter)
+    letter = letter.upcase
   end
 end
