@@ -1,3 +1,4 @@
+# Handles the display of messages to the player.
 class Display
   def initialize(word)
     @word = word
@@ -21,5 +22,22 @@ class Display
     end
     puts "Clue: #{clue.join(' ')}"
     puts "Incorrect #{missed.size}/8: #{missed.keys.join(' ')}"
+  end
+
+  def msg(reason)
+    case reason
+    when "guessed"
+      puts "This letter has already been guessed."
+    when "invalid"
+      puts "Only letters (A-Z) are accepted as guesses."
+    when "req_letter"
+      puts "\nPlease enter your guess:"
+    when "win"
+      puts "\n Correct, you've figured out the secret word!"
+    when "lose"
+      puts "\n Sorry, you've run out of guesses. Better luck next time!"
+    else
+      puts "Dev input the wrong reason. Go yell at him."
+    end
   end
 end

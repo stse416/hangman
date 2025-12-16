@@ -1,3 +1,4 @@
+# Grabs the dictionary file and selects a word for the game.
 class Dictionary
   attr_reader :game_word
 
