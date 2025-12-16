@@ -14,9 +14,16 @@ class Display
     Incorrect guesses will be tallied and if you reach 8 incorrect guesses you lose"
   end
 
-  def self.show_guessed(arr)
-    puts "Guessed letters:  { #{arr.join('  ')} }"
+  def show_guessed(hash)
+    puts "Guessed letters:  { #{hash.keys.join('  ')} }"
+  end
+
+  def show_clue(guessed, missed)
+    chars = @word.chars
+    clue = chars.map do |char|
+      guessed[char.to_sym] ? char : "_"
+    end
+    puts "Clue: #{clue.join(' ')}"
+    puts "Incorrect: #{missed.keys.join(' ')}"
   end
 end
-
-Display.show_guessed(%w[G H I P Q])
