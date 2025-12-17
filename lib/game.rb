@@ -20,7 +20,12 @@ class Game
     @display.introduction
 
     start_turn while !@game_over && @missed.size < 8
+    return unless @missed.size >= 8
+
+    @display.msg("lose")
   end
+
+  private
 
   def start_turn
     @display.msg("req_letter")
@@ -32,19 +37,27 @@ class Game
 
     return unless letter_valid?(letter) == true
 
-    @guessed[letter.to_sym] = true
+    @guessed[letter.to_sym] = true if @word.include?(letter)
+    p "Guessed: #{@guessed}, size is #{@guessed.size}. Word is #{@word}, length is #{@word.length}"
     @missed[letter.to_sym] = true unless @word.include?(letter)
-    @display.show_clue(@guessed, @missed)
+    fully_guessed = @display.show_clue(@guessed, @missed)
+
+    process_win if fully_guessed
   end
 
   def letter_valid?(letter)
     if @guessed[letter.to_sym] || @missed[letter.to_sym]
       @display.msg("guessed")
       return false
-    elsif letter.match(/[^A-Z]/)
+    elsif letter.match(/[^A-Z]/) || letter.length > 1 || letter.empty?
       @display.msg("invalid")
       return false
     end
     true
+  end
+
+  def process_win
+    @display.msg("win")
+    @game_over = true
   end
 end
