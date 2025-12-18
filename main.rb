@@ -1,4 +1,4 @@
-require_relative "lib/game"
+require_relative "lib/intro"
 
-game = Game.new
-game.start_game
+game = Intro.new
+game.start_Hangman
