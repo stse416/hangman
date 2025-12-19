@@ -4,17 +4,17 @@ require "yaml"
 
 # Game logic handler
 class Game
-  def initialize
-    @dictionary = Dictionary.new("google-10000-english-no-swears.txt")
-    @word = @dictionary.game_word.upcase
-    @guessed = {}
-    @missed = {}
+  def initialize(word = nil, guessed = {}, missed = {})
+    @word = get_word(word)
+    @guessed = guessed
+    @missed = missed
     @game_over = false
   end
 
   include Display
 
   def start_playing
+    show_clue(@word, @guessed, @missed)
     start_turn while !@game_over && @missed.size < 8
     return unless @missed.size >= 8
 
@@ -26,8 +26,6 @@ class Game
   def start_turn
     message("req_letter")
 
-    p "Word: #{@word}, Guessed: #{@guessed} Missed: #{@missed}"
-
     input = gets.chomp
     return if save_check(input)
 
@@ -37,8 +35,7 @@ class Game
   def save_check(input)
     return false unless input.match?(/save/i)
 
-    save_game(create_save_location)
-    message("saved")
+    save_game(create_save_location, to_yaml)
     @game_over = true
   end
 
@@ -48,8 +45,6 @@ class Game
     return unless letter_valid?(letter) == true
 
     @guessed[letter.to_sym] = true if @word.include?(letter)
-    # FOR TESTING
-    p "Guessed: #{@guessed}, size is #{@guessed.size}. Word is #{@word}, length is #{@word.length}"
     @missed[letter.to_sym] = true unless @word.include?(letter)
     fully_guessed = show_clue(@word, @guessed, @missed)
 
@@ -59,12 +54,20 @@ class Game
   def letter_valid?(letter)
     if @guessed[letter.to_sym] || @missed[letter.to_sym]
       message("guessed")
+      show_clue(@word, @guessed, @missed)
       return false
     elsif letter.match(/[^A-Z]/) || letter.length > 1 || letter.empty?
       message("invalid")
+      show_clue(@word, @guessed, @missed)
       return false
     end
     true
+  end
+
+  def get_word(word)
+    return word if word
+
+    Dictionary.new("google-10000-english-no-swears.txt").game_word.upcase
   end
 
   def process_win
@@ -72,8 +75,17 @@ class Game
     @game_over = true
   end
 
-  def save_game(file)
-    # serializes game to the file
+  def save_game(file, yaml_string)
+    file.puts(yaml_string)
+    file.close
+  end
+
+  def to_yaml
+    YAML.dump({
+                word: @word,
+                guessed: @guessed,
+                missed: @missed
+              })
   end
 
   def create_save_location
@@ -83,6 +95,7 @@ class Game
       exist = File.exist?("./saves/save#{num}")
       unless exist
         f = File.new("./saves/save#{num}", "w")
+        message("saved", num)
         saved = true
       end
 
